@@ -1,0 +1,1 @@
+add_library (echo SHARED echo.cxx) 
