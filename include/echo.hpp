@@ -22,7 +22,7 @@ typedef boost::shared_ptr<echo<int> const>         int_echo_cptr;
 // http://osdir.com/ml/programming.swig/2004-09/msg00097.html
 
 template<class T>
-boost::shared_ptr<echo<T> const> new_echo();
+boost::shared_ptr<echo<T> const> create_echo();
 
 template <class T>
 double benchmark( echo<T> const& e, T const& value, int walk_count );

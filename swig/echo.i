@@ -5,12 +5,13 @@
 %module pyecho
 
 %module(directors="1") pyecho
-#%feature("director") echo;
 
 %define ECHO_WRAP( NAME, T ) 
+//  %rename(echo_ ## NAME) echo<T>;
+  %feature("director") echo<T>;
   %template(echo_ ## NAME) echo<T>;
   %template(echo_ ## NAME ## _cptr) boost::shared_ptr<echo<T> const>;
-  %template(new_echo_ ## NAME) new_echo<T>;
+  %template(create_echo_ ## NAME) create_echo<T>;
   %template(benchmark_## NAME) benchmark<T>;
 %enddef
 

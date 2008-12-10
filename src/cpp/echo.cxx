@@ -15,7 +15,7 @@ public: // echo interface
 
 // echo factory function
 template <class T>
-boost::shared_ptr<echo<T> const> new_echo()
+boost::shared_ptr<echo<T> const> create_echo()
 {
   return boost::shared_ptr<echo<T> const>( new echo_impl<T> );
 }
@@ -34,10 +34,10 @@ double benchmark( echo<T> const& e, T const& value, int walk_count )
 }
 
 // explicit template instantiations
-template boost::shared_ptr<echo<int> const> new_echo<int>();
+template boost::shared_ptr<echo<int> const> create_echo<int>();
 template double benchmark( echo<int> const&, int const& , int );
 
-template boost::shared_ptr<echo<std::string> const> new_echo<std::string>();
+template boost::shared_ptr<echo<std::string> const> create_echo<std::string>();
 template double benchmark( echo<std::string> const&, std::string const&, int );
 
 
