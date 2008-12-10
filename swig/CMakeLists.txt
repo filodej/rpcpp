@@ -1,13 +1,15 @@
 INCLUDE(UseSWIG)
-link_directories (${PYTHON_LIBRARY_PATH})
 
-include_directories (${PYECHO_SOURCE_DIR}/include) 
-link_directories    (${PYECHO_BINARY_DIR}/bin) 
+include_directories (${PROJECT_SOURCE_DIR}/include) 
+include_directories (${PYTHON_INCLUDE_PATH})
+
+link_directories    (${PROJECT_SOURCE_DIR}/bin) 
+link_directories (${PYTHON_LIBRARY_PATH})
 
 SET(CMAKE_SWIG_OUTDIR ${LIBRARY_OUTPUT_PATH})
 SET(CMAKE_SWIG_FLAGS "")
 SET_SOURCE_FILES_PROPERTIES(echo.i PROPERTIES CPLUSPLUS ON)
 SET_SOURCE_FILES_PROPERTIES(echo.i PROPERTIES SWIG_FLAGS "-Wall;-DSCI_NOPERSISTENT")
 
-SWIG_ADD_MODULE(echo python echo.i)
-SWIG_LINK_LIBRARIES(echo echo ${PYTHON_LIBRARIES} )
+SWIG_ADD_MODULE(pyecho python echo.i)
+SWIG_LINK_LIBRARIES(pyecho echo ${PYTHON_LIBRARIES} )

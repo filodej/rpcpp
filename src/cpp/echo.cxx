@@ -1,4 +1,4 @@
-#include "./echo.hpp"
+#include <echo.hpp>
 #include <boost/timer.hpp>
 #include <stdexcept>
 
@@ -8,6 +8,7 @@ class echo_impl : public echo<T>
 {
 public: // echo interface
   T call( T const& value ) const { return value; }
+  echo_impl() {}
 };
 
 // http://osdir.com/ml/programming.swig/2004-09/msg00097.html

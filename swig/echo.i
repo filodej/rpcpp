@@ -1,17 +1,23 @@
 %include "./shared_ptr.i"
-%include "./yoyo.hpp" 
+%include "std_string.i"
+%include <echo.hpp> 
 
-%define YOYO_WRAP( NAME, T ) 
-  %template(yoyo_ ## NAME) yoyo<T>;
-  %template(yoyo_ ## NAME ## _cptr) boost::shared_ptr<yoyo<T> const>;
-  %template(create_yoyo_ ## NAME) create_yoyo<T>;
+%module pyecho
+
+%module(directors="1") pyecho
+#%feature("director") echo;
+
+%define ECHO_WRAP( NAME, T ) 
+  %template(echo_ ## NAME) echo<T>;
+  %template(echo_ ## NAME ## _cptr) boost::shared_ptr<echo<T> const>;
+  %template(new_echo_ ## NAME) new_echo<T>;
   %template(benchmark_## NAME) benchmark<T>;
 %enddef
 
-YOYO_WRAP( int, int )
-YOYO_WRAP( str, std::string )
+ECHO_WRAP( int, int )
+ECHO_WRAP( str, std::string )
 
 
 %{
-#include "./yoyo.hpp"
+#include <echo.hpp>
 %}

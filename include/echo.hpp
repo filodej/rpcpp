@@ -10,7 +10,7 @@ class echo : boost::noncopyable
 {
  public:
     virtual T call( T const& value ) const = 0;
-    virtual ~echo() = 0;
+    virtual ~echo() {};
  private:
 };
 
