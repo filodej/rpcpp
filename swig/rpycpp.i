@@ -2,9 +2,7 @@
 %include "std_string.i"
 %include <echo.hpp> 
 
-%module pyecho
-
-%module(directors="1") pyecho
+%module(directors="1") rpycpp
 
 %define ECHO_WRAP( NAME, T ) 
 //  %rename(echo_ ## NAME) echo<T>;

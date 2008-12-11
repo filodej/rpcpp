@@ -1,7 +1,7 @@
 import sys
 import getopt
 import new
-import pyecho
+import rpycpp
 import rpyc
 import rpyc.utils.server
 
@@ -21,10 +21,10 @@ def _make_echo_adapter( base ):
     return _adapter
 
 class adapter_factory( object ):
-    echo_int = _make_echo_adapter( pyecho.echo_int )
-    echo_str = _make_echo_adapter( pyecho.echo_str )
+    echo_int = _make_echo_adapter( rpycpp.echo_int )
+    echo_str = _make_echo_adapter( rpycpp.echo_str )
     
-    def __init__( self, factory = pyecho ):
+    def __init__( self, factory = rpycpp ):
 	self.factory = factory
 	
     def create_echo_int( self ):
@@ -36,18 +36,18 @@ class adapter_factory( object ):
 class remote_factory( object ):
     def __init__( self, host, port ):
 	self.conn = rpyc.classic.connect( host, port )
-	mod = self.conn.modules["pyecho"]
+	mod = self.conn.modules["rpycpp"]
 	self.create_echo_int = mod.create_echo_int
 	self.create_echo_str = mod.create_echo_str
 	
-def simple_test( factory = pyecho ):
+def simple_test( factory = rpycpp ):
     ei = factory.create_echo_int()
     assert 42 == ei.call( 42 )
     
     es = factory.create_echo_str()
     assert '42' == es.call( '42' )
 
-def advanced_test( factory = pyecho, treshold = 5.0, verbose = False ):
+def advanced_test( factory = rpycpp, treshold = 5.0, verbose = False ):
     def benchmark( echo, fn, val ):
 	i = 10
 	while True:
@@ -60,10 +60,10 @@ def advanced_test( factory = pyecho, treshold = 5.0, verbose = False ):
     	    print '\t\t(%d calls in %f seconds)' % ( 2**i, t )
 
     print '\tcall(int)\t\t',
-    benchmark( factory.create_echo_int(), pyecho.benchmark_int, 42 )
+    benchmark( factory.create_echo_int(), rpycpp.benchmark_int, 42 )
     for i in range( 3, 8 ):
         print '\tcall(str[len=%d])\t' % ( 2**i ),
-	benchmark( factory.create_echo_str(), pyecho.benchmark_str, 2**i * 'X' )
+	benchmark( factory.create_echo_str(), rpycpp.benchmark_str, 2**i * 'X' )
     
 g_usage = """\
 usage:
@@ -119,7 +119,7 @@ if __name__ == '__main__':
 	ts.start()
     else:
 	factories = [ 
-	    ( 'in-process calls [c++ -> c++]:', pyecho ), 
+	    ( 'in-process calls [c++ -> c++]:', rpycpp ), 
 	    ( 'in-process calls [c++ -> python -> c++]:', adapter_factory() ) ]
 	if mode == 'client':
     	    factories.append( ( 'out-of-process localhost calls [c++ -> python -> RPC -> python -> c++]:', adapter_factory( remote_factory( hostname, port ) ) ) )
