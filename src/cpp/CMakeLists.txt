@@ -1,1 +1,1 @@
-add_library (echo SHARED echo.cxx) 
+add_library (rpcpp SHARED echo.cxx) 
