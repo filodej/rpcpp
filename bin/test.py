@@ -1,7 +1,7 @@
 import sys
 import getopt
 import new
-import rpycpp
+import rpcppy
 import rpyc
 import rpyc.utils.server
 
@@ -21,10 +21,10 @@ def _make_echo_adapter( base ):
     return _adapter
 
 class adapter_factory( object ):
-    echo_int = _make_echo_adapter( rpycpp.echo_int )
-    echo_str = _make_echo_adapter( rpycpp.echo_str )
+    echo_int = _make_echo_adapter( rpcppy.echo_int )
+    echo_str = _make_echo_adapter( rpcppy.echo_str )
     
-    def __init__( self, factory = rpycpp ):
+    def __init__( self, factory = rpcppy ):
 	self.factory = factory
 	
     def create_echo_int( self ):
@@ -36,18 +36,18 @@ class adapter_factory( object ):
 class remote_factory( object ):
     def __init__( self, host, port ):
 	self.conn = rpyc.classic.connect( host, port )
-	mod = self.conn.modules["rpycpp"]
+	mod = self.conn.modules["rpcppy"]
 	self.create_echo_int = mod.create_echo_int
 	self.create_echo_str = mod.create_echo_str
 	
-def simple_test( factory = rpycpp ):
+def simple_test( factory = rpcppy ):
     ei = factory.create_echo_int()
     assert 42 == ei.call( 42 )
     
     es = factory.create_echo_str()
     assert '42' == es.call( '42' )
 
-def advanced_test( factory = rpycpp, treshold = 5.0, verbose = False ):
+def advanced_test( factory = rpcppy, treshold = 5.0, verbose = False ):
     def benchmark( echo, fn, val ):
 	i = 10
 	while True:
@@ -60,10 +60,10 @@ def advanced_test( factory = rpycpp, treshold = 5.0, verbose = False ):
     	    print '\t\t(%d calls in %f seconds)' % ( 2**i, t )
 
     print '\tcall(int)\t\t',
-    benchmark( factory.create_echo_int(), rpycpp.benchmark_int, 42 )
+    benchmark( factory.create_echo_int(), rpcppy.benchmark_int, 42 )
     for i in range( 3, 8 ):
         print '\tcall(str[len=%d])\t' % ( 2**i ),
-	benchmark( factory.create_echo_str(), rpycpp.benchmark_str, 2**i * 'X' )
+	benchmark( factory.create_echo_str(), rpcppy.benchmark_str, 2**i * 'X' )
     
 g_usage = """\
 usage:
@@ -71,7 +71,7 @@ usage:
 options:
     -h, --help     ... prints this message
     -m, --mode     ... mode (one of 'local', 'client', server)
-    -H, --hostname ... rpyc server hostname (default 'localhost')
+    -H, --hostnames... comma separated list of servers' hostnames (default 'localhost')
     -p, --port     ... rpyc port (default 18861)
     -t, --treshold ... benchmark treshold (default 5.0 sec.)
     -v, --verbose  ... detailed test results printed (disabled by default)
@@ -79,12 +79,12 @@ options:
 
 def parse_options():
     try:
-	opts, args = getopt.getopt(sys.argv[1:], "hH:m:p:t:v", ["help", "hostname=", "mode=", "port=", "treshold=", "verbose"])
+	opts, args = getopt.getopt(sys.argv[1:], "hH:m:p:t:v", ["help", "hostnames=", "mode=", "port=", "treshold=", "verbose"])
     except getopt.GetoptError, err:
 	print str(err) # will print something like "option -a not recognized"
 	print g_usage
 	sys.exit(2)
-    hostname = "localhost"
+    hostnames = 'localhost'
     port = 18861
     mode = 'local'
     treshold = 5.0
@@ -99,8 +99,8 @@ def parse_options():
 	    treshold = float(a)
 	elif o in ("-v", "--verbose"):
 	    verbose = True
-	elif o in ("-h", "--hostname"):
-	    hostname = a
+	elif o in ("-H", "--hostnames"):
+	    hostnames = a
 	elif o in ("-m", "--mode"):
 	    if a not in ('local', 'client', 'server'):
 		print 'unknown mode:', a
@@ -109,20 +109,21 @@ def parse_options():
 	    mode = a
 	else:
 	    assert False, "unhandled option"
-    return mode, hostname, port, treshold, verbose
+    return mode, hostnames, port, treshold, verbose
     
     
 if __name__ == '__main__':
-    mode, hostname, port, treshold, verbose = parse_options()
+    mode, hostnames, port, treshold, verbose = parse_options()
     if mode == 'server':
         ts = rpyc.utils.server.ThreadedServer( rpyc.SlaveService, port = port )
 	ts.start()
     else:
 	factories = [ 
-	    ( 'in-process calls [c++ -> c++]:', rpycpp ), 
+	    ( 'in-process calls [c++ -> c++]:', rpcppy ), 
 	    ( 'in-process calls [c++ -> python -> c++]:', adapter_factory() ) ]
 	if mode == 'client':
-    	    factories.append( ( 'out-of-process localhost calls [c++ -> python -> RPC -> python -> c++]:', adapter_factory( remote_factory( hostname, port ) ) ) )
+	    for hostname in hostnames.split(','):
+    		factories.append( ( 'out-of-process localhost calls [c++ -> python -> RPC -> python -> c++]:', adapter_factory( remote_factory( hostname, port ) ) ) )
 	for desc, f in factories:
 	    print desc
 	    simple_test( f )

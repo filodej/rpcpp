@@ -2,10 +2,7 @@
 %include "std_string.i"
 %include <echo.hpp> 
 
-%module(directors="1") rpycpp
-
 %define ECHO_WRAP( NAME, T ) 
-//  %rename(echo_ ## NAME) echo<T>;
   %feature("director") echo<T>;
   %template(echo_ ## NAME) echo<T>;
   %template(echo_ ## NAME ## _cptr) boost::shared_ptr<echo<T> const>;
