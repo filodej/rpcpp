@@ -5,8 +5,9 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
+
 template <class T>
-class echo : boost::noncopyable
+class echo : public boost::noncopyable
 {
  public:
     virtual T call( T const& value ) const = 0;
