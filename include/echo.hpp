@@ -4,9 +4,22 @@
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 #include <string>
+#include "api_helper.hpp"
+
+#ifdef RPCPP_DLL // defined if RPCPP is compiled as a DLL
+  #ifdef RPCPP_DLL_EXPORTS // defined if we are building the FOX DLL (instead of using it)
+    #define RPCPP_API API_DLL_EXPORT
+  #else
+    #define RPCPP_API API_DLL_IMPORT
+  #endif // RPCPP_DLL_EXPORTS
+  #define RPCPP_LOCAL API_DLL_LOCAL
+#else // RPCPP_DLL is not defined: this means RPCPP is a static lib.
+  #define RPCPP_API
+  #define RPCPP_LOCAL
+#endif // RPCPP_DLL
 
 template <class T>
-class echo : boost::noncopyable
+class RPCPP_API echo : boost::noncopyable
 {
  public:
     virtual T call( T const& value ) const = 0;
@@ -22,9 +35,9 @@ typedef boost::shared_ptr<echo<int> const>         int_echo_cptr;
 // http://osdir.com/ml/programming.swig/2004-09/msg00097.html
 
 template<class T>
-boost::shared_ptr<echo<T> const> create_echo();
+extern RPCPP_API boost::shared_ptr<echo<T> const> create_echo();
 
 template <class T>
-double benchmark( echo<T> const& e, T const& value, int walk_count );
+extern RPCPP_API double benchmark( echo<T> const& e, T const& value, int walk_count );
 
 #endif //__ECHO_INCLUDED_HPP__
