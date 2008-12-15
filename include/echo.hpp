@@ -36,9 +36,9 @@ typedef boost::shared_ptr<echo<int> const>         int_echo_cptr;
 // http://osdir.com/ml/programming.swig/2004-09/msg00097.html
 
 template<class T>
-extern RPCPP_API boost::shared_ptr<echo<T> const> create_echo();
+extern boost::shared_ptr<echo<T> const> RPCPP_API create_echo();
 
 template <class T>
-extern RPCPP_API double benchmark( echo<T> const& e, T const& value, int walk_count );
+extern double RPCPP_API benchmark( echo<T> const& e, T const& value, int walk_count );
 
 #endif //__ECHO_INCLUDED_HPP__
