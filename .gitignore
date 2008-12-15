@@ -1,0 +1,8 @@
+*~ 
+*_wrap.cxx
+*_wrap.h
+*.pyc
+Makefile
+cmake_install.cmake
+CMakeFiles
+CMakeCache.txt
