@@ -1,4 +1,5 @@
 *~ 
+*.bak
 *_wrap.cxx
 *_wrap.h
 *.pyc
@@ -6,3 +7,7 @@ Makefile
 cmake_install.cmake
 CMakeFiles
 CMakeCache.txt
+build
+bin/Release
+bin/Debug
+bin/rpcppy.py

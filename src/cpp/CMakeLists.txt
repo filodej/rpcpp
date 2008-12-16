@@ -1,10 +1,24 @@
-#if (CMAKE_COMPILER_IS_GNUCXX AND USE_GCC_VISIBILITY)
-#  # visibility support
-#  check_cxx_compiler_flag(-fvisibility=hidden __HAVE_GCC_VISIBILITY)
-#endif(CMAKE_COMPILER_IS_GNUCXX AND USE_GCC_VISIBILITY)
+if ( CMAKE_COMPILER_IS_GNUCC )
+	add_definitions( -fvisibility=hidden -fvisibility-inlines-hidden )
+endif ( CMAKE_COMPILER_IS_GNUCC )
+add_definitions(-DRPCPP_DLL)
 
-#if ( __HAVE_GCC_VISIBILITY )
-   SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -DRPCPP_DLL -DRPCPP_DLL_EXPORTS" )
-#endif ( __HAVE_GCC_VISIBILITY )
+set( rpcpp_HEADER_FILES
+     ../../include/api_helper.hpp 
+     ../../include/echo.hpp 
+     ../../include/rpcpp.hpp 
+     )
 
-add_library (rpcpp SHARED echo.cxx) 
+set( rpcpp_SOURCE_FILES
+     rpcpp.cxx 
+     )
+
+set_source_files_properties(
+    ${rpcpp_HEADER_FILES}
+    PROPERTIES
+    HEADER_FILE_ONLY TRUE
+    )
+
+add_library (rpcpp SHARED ${rpcpp_HEADER_FILES} ${rpcpp_SOURCE_FILES} ) 
+
+set_target_properties(rpcpp PROPERTIES DEFINE_SYMBOL RPCPP_DLL_EXPORTS )

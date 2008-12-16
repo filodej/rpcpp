@@ -1,4 +1,4 @@
-#include <echo.hpp>
+#include <rpcpp.hpp>
 #include <boost/timer.hpp>
 #include <stdexcept>
 
@@ -34,10 +34,10 @@ double benchmark( echo<T> const& e, T const& value, int walk_count )
 }
 
 // explicit template instantiations
-template boost::shared_ptr<echo<int> const> create_echo<int>();
-template double benchmark( echo<int> const&, int const& , int );
+template RPCPP_API boost::shared_ptr<echo<int> const> create_echo<int>();
+template RPCPP_API double benchmark( echo<int> const&, int const& , int );
 
-template boost::shared_ptr<echo<std::string> const> create_echo<std::string>();
-template double benchmark( echo<std::string> const&, std::string const&, int );
+template RPCPP_API boost::shared_ptr<echo<std::string> const> create_echo<std::string>();
+template RPCPP_API double benchmark( echo<std::string> const&, std::string const&, int );
 
 

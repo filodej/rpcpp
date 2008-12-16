@@ -1,4 +1,4 @@
 %module(directors="1") rpcppy
 
-%include "echo.i"
+%include "rpcpp.i"
 
