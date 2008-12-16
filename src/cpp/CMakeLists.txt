@@ -1,8 +1,24 @@
-IF ( CMAKE_COMPILER_IS_GNUCC )
-	ADD_DEFINITIONS( -fvisibility=hidden -fvisibility-inlines-hidden )
-ENDIF ( CMAKE_COMPILER_IS_GNUCC )
+if ( CMAKE_COMPILER_IS_GNUCC )
+	add_definitions( -fvisibility=hidden -fvisibility-inlines-hidden )
+endif ( CMAKE_COMPILER_IS_GNUCC )
+add_definitions(-DRPCPP_DLL)
 
-add_library (rpcpp SHARED echo.cxx) 
+set( rpcpp_HEADER_FILES
+     ../../include/api_helper.hpp 
+     ../../include/echo.hpp 
+     ../../include/rpcpp.hpp 
+     )
 
-ADD_DEFINITIONS(-DRPCPP_DLL)
-SET_TARGET_PROPERTIES(rpcpp PROPERTIES DEFINE_SYMBOL RPCPP_DLL_EXPORTS )
+set( rpcpp_SOURCE_FILES
+     rpcpp.cxx 
+     )
+
+set_source_files_properties(
+    ${rpcpp_HEADER_FILES}
+    PROPERTIES
+    HEADER_FILE_ONLY TRUE
+    )
+
+add_library (rpcpp SHARED ${rpcpp_HEADER_FILES} ${rpcpp_SOURCE_FILES} ) 
+
+set_target_properties(rpcpp PROPERTIES DEFINE_SYMBOL RPCPP_DLL_EXPORTS )

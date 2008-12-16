@@ -50,7 +50,7 @@ def simple_test( factory = rpcppy ):
 def advanced_test( factory = rpcppy, treshold = 5.0, verbose = False ):
     def benchmark( echo, fn, val ):
 	i = 10
-	while True:
+	while 2**(i+1) <= sys.maxint:
 	    i += 1
 	    t = fn( deref(echo), val, 2**i )
 	    if t > treshold:
