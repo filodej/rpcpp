@@ -1,6 +1,8 @@
 %include "./shared_ptr.i"
 %include "std_string.i"
+%include <boost/noncopyable.hpp> 
 %include <echo.hpp> 
+%include <rpcpp.hpp> 
 
 %define ECHO_WRAP( NAME, T ) 
   %feature("director") echo<T>;
@@ -15,5 +17,5 @@ ECHO_WRAP( str, std::string )
 
 
 %{
-#include <echo.hpp>
+#include <rpcpp.hpp>
 %}
