@@ -24,7 +24,10 @@ set_source_files_properties(
 
 swig_add_module(rpcppy python rpcppy.i)
 swig_link_libraries(rpcppy rpcpp ${PYTHON_LIBRARIES} )
-set_target_properties(_rpcppy PROPERTIES SUFFIX ".pyd")
+
+if( WIN32 )
+    set_target_properties(_rpcppy PROPERTIES SUFFIX ".pyd")
+endif( WIN32 )
 
 #swig_add_module(rpcppj java rpcppj.i)
 #swig_link_libraries(rpcppj rpcpp ${JAVA_LIBRARIES} )
