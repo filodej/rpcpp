@@ -1,4 +1,6 @@
 import sys
+import os.path
+sys.path.append( os.path.abspath( './relwithdebinfo') )
 import getopt
 import new
 import rpcppy
