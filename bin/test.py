@@ -26,6 +26,8 @@ def py_asynch_benchmark( echo, val, count ):
     proxies = [ rpyc.async( echo.call )( val ) for i in xrange( count ) ]
     while proxies:
         proxies = filter( check_val, proxies )
+        if proxies:
+            print len(proxies)
     return time.clock() - start
 
 class adapter_factory( object ):
@@ -143,23 +145,24 @@ def build_test_suite( hostnames, port ):
         ( 'in-process calls [c++ -> c++]:', rpcppy, rpcppy.benchmark_int, rpcppy.benchmark_str ), 
         ( 'in-process calls [python -> c++]:', rpcppy, py_synch_benchmark, py_synch_benchmark ), 
         ( 'in-process calls [c++ -> python -> c++]:', adapter_factory( rpcppy ), rpcppy.benchmark_int, rpcppy.benchmark_str ) ]
-    # out-of-process tests for each specified server
-    for hostname in hostnames.split(','):
-        suite.append( (
-            'out-of-process localhost synch calls [c++ -> python -> RPC -> python -> c++]:',
-            adapter_factory( remote_factory( hostname, port ) ),
-            rpcppy.benchmark_int,
-            rpcppy.benchmark_str ) )
-        suite.append( (
-            'out-of-process localhost synch calls [python -> RPC -> python -> c++]:',
-            remote_factory( hostname, port ),
-            py_synch_benchmark,
-            py_synch_benchmark ) )
-        suite.append( (
-            'out-of-process localhost asynch calls [python -> RPC -> python -> c++]:',
-            remote_factory( hostname, port ),
-            py_asynch_benchmark,
-            py_asynch_benchmark ) )
+    if hostnames:
+        # out-of-process tests for each specified server
+        for hostname in hostnames.split(','):
+            suite.append( (
+                'out-of-process "%s" synch calls [c++ -> python -> RPC -> python -> c++]:' % hostname,
+                adapter_factory( remote_factory( hostname, port ) ),
+                rpcppy.benchmark_int,
+                rpcppy.benchmark_str ) )
+            suite.append( (
+                'out-of-process "%s" synch calls [python -> RPC -> python -> c++]:' % hostname,
+                remote_factory( hostname, port ),
+                py_synch_benchmark,
+                py_synch_benchmark ) )
+            suite.append( (
+                'out-of-process "%s" asynch calls [python -> RPC -> python -> c++]:' % hostname,
+                remote_factory( hostname, port ),
+                py_asynch_benchmark,
+                py_asynch_benchmark ) )
     return suite
 
 def run_test_suite( suite, treshold = 5.0, verbose = False ):
