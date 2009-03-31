@@ -7,28 +7,50 @@ import rpcppy
 import rpyc
 import rpyc.utils.server
 
-def py_synch_benchmark( echo, val, count ):
-    """Python implemented benchmark for synchronous calls"""
+def py_synch_indirect_benchmark( echo, val, count ):
+    """Python implemented unbuffered benchmark for synchronous indirect calls"""
     start = time.clock()
     for i in xrange( count ):
         assert echo.call( val ) == val
     return time.clock() - start
 
-def py_asynch_benchmark( echo, val, count ):
-    """Python implemented benchmark for asynchronous RPyC calls"""
+def py_synch_direct_benchmark( echo, val, count ):
+    """Python implemented unbuffered benchmark for synchronous direct calls"""
+    call = echo.call
+    start = time.clock()
+    for i in xrange( count ):
+        assert call( val ) == val
+    return time.clock() - start
+
+def _py_buffered_benchmark( call, val, check_val, count, buffer_size = 512 ):
+    """Python implemented benchmark with result buffering"""
+    start = time.clock()
+    proxies = []
+    while count or proxies:
+        num_inserted = min( buffer_size - len( proxies ), count )
+        proxies.extend( call( val ) for i in xrange( num_inserted ) )
+#        print len( proxies ),
+        proxies = filter( check_val, proxies )
+        count -= num_inserted
+#        print len( proxies ), count
+    return time.clock() - start
+
+def py_synch_buffered_benchmark( echo, val, count ):
+    """Python implemented benchmark with result buffering"""
+    def check_val( result ):
+        assert result == val
+        return False
+    return _py_buffered_benchmark( echo.call, val, check_val, count )
+
+def py_asynch_buffered_benchmark( echo, val, count ):
+    """Python implemented benchmark with asynch proxy buffering"""
     def check_val( proxy ):
         if proxy.ready:
             assert proxy.value == val
             return False
         else:
             return True
-    start = time.clock()
-    proxies = [ rpyc.async( echo.call )( val ) for i in xrange( count ) ]
-    while proxies:
-        proxies = filter( check_val, proxies )
-        if proxies:
-            print len(proxies)
-    return time.clock() - start
+    return _py_buffered_benchmark( rpyc.async( echo.call ), val, check_val, count )
 
 class adapter_factory( object ):
     """Factory adapter (swig delegate cannot be directly marshalled by RPyC)
@@ -143,7 +165,8 @@ def build_test_suite( hostnames, port ):
     # in-process tests
     suite = [ 
         ( 'in-process calls [c++ -> c++]:', rpcppy, rpcppy.benchmark_int, rpcppy.benchmark_str ), 
-        ( 'in-process calls [python -> c++]:', rpcppy, py_synch_benchmark, py_synch_benchmark ), 
+        ( 'in-process direct calls [python -> c++]:', rpcppy, py_synch_direct_benchmark, py_synch_direct_benchmark ), 
+        ( 'in-process indirect calls [python -> c++]:', rpcppy, py_synch_indirect_benchmark, py_synch_indirect_benchmark ), 
         ( 'in-process calls [c++ -> python -> c++]:', adapter_factory( rpcppy ), rpcppy.benchmark_int, rpcppy.benchmark_str ) ]
     if hostnames:
         # out-of-process tests for each specified server
@@ -154,15 +177,25 @@ def build_test_suite( hostnames, port ):
                 rpcppy.benchmark_int,
                 rpcppy.benchmark_str ) )
             suite.append( (
-                'out-of-process "%s" synch calls [python -> RPC -> python -> c++]:' % hostname,
+                'out-of-process "%s" synch indirect calls [python -> RPC -> python -> c++]:' % hostname,
                 remote_factory( hostname, port ),
-                py_synch_benchmark,
-                py_synch_benchmark ) )
+                py_synch_indirect_benchmark,
+                py_synch_indirect_benchmark ) )
             suite.append( (
-                'out-of-process "%s" asynch calls [python -> RPC -> python -> c++]:' % hostname,
+                'out-of-process "%s" synch direct calls [python -> RPC -> python -> c++]:' % hostname,
                 remote_factory( hostname, port ),
-                py_asynch_benchmark,
-                py_asynch_benchmark ) )
+                py_synch_direct_benchmark,
+                py_synch_direct_benchmark ) )
+            suite.append( (
+                'out-of-process "%s" buffered synch calls [python -> RPC -> python -> c++]:' % hostname,
+                remote_factory( hostname, port ),
+                py_synch_buffered_benchmark,
+                py_synch_buffered_benchmark ) )
+            suite.append( (
+                'out-of-process "%s" buffered asynch calls [python -> RPC -> python -> c++]:' % hostname,
+                remote_factory( hostname, port ),
+                py_asynch_buffered_benchmark,
+                py_asynch_buffered_benchmark ) )
     return suite
 
 def run_test_suite( suite, treshold = 5.0, verbose = False ):

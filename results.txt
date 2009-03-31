@@ -1,0 +1,144 @@
+
+D:\starteam\docplatform\rpcpp\bin>test.py -H localhost,10.0.2.2,prg3k04
+in-process calls [c++ -> c++]:
+        call(int)               416340373.788290 calls/sec.
+        call(str[len=8])        14364054.794521 calls/sec.
+        call(str[len=16])       4277719.530852 calls/sec.
+        call(str[len=32])       3969059.853324 calls/sec.
+        call(str[len=64])       3925872.469872 calls/sec.
+        call(str[len=128])      3621242.391539 calls/sec.
+in-process direct calls [python -> c++]:
+        call(int)               1458452.418937 calls/sec.
+        call(str[len=8])        800563.529584 calls/sec.
+        call(str[len=16])       468172.710771 calls/sec.
+        call(str[len=32])       471741.048997 calls/sec.
+        call(str[len=64])       455922.906647 calls/sec.
+        call(str[len=128])      434606.085993 calls/sec.
+in-process indirect calls [python -> c++]:
+        call(int)               1077910.527897 calls/sec.
+        call(str[len=8])        665014.285316 calls/sec.
+        call(str[len=16])       424980.272230 calls/sec.
+        call(str[len=32])       426478.169133 calls/sec.
+        call(str[len=64])       412849.407006 calls/sec.
+        call(str[len=128])      394166.728099 calls/sec.
+in-process calls [c++ -> python -> c++]:
+        call(int)               496132.481665 calls/sec.
+        call(str[len=8])        335544.320000 calls/sec.
+        call(str[len=16])       223696.213333 calls/sec.
+        call(str[len=32])       224438.356164 calls/sec.
+        call(str[len=64])       221101.950448 calls/sec.
+        call(str[len=128])      217524.323203 calls/sec.
+out-of-process "localhost" synch calls [c++ -> python -> RPC -> python -> c++]:
+        call(int)               1801.627447 calls/sec.
+        call(str[len=8])        1783.195472 calls/sec.
+        call(str[len=16])       1777.199262 calls/sec.
+        call(str[len=32])       1771.243243 calls/sec.
+        call(str[len=64])       1774.312324 calls/sec.
+        call(str[len=128])      1771.051778 calls/sec.
+out-of-process "localhost" synch indirect calls [python -> RPC -> python -> c++]
+:
+        call(int)               1827.128589 calls/sec.
+        call(str[len=8])        1812.710256 calls/sec.
+        call(str[len=16])       1801.582771 calls/sec.
+        call(str[len=32])       1793.988124 calls/sec.
+        call(str[len=64])       1802.146802 calls/sec.
+        call(str[len=128])      1796.239431 calls/sec.
+out-of-process "localhost" synch direct calls [python -> RPC -> python -> c++]:
+        call(int)               4855.299259 calls/sec.
+        call(str[len=8])        4757.274356 calls/sec.
+        call(str[len=16])       4703.827548 calls/sec.
+        call(str[len=32])       4632.139542 calls/sec.
+        call(str[len=64])       4680.109954 calls/sec.
+        call(str[len=128])      4619.936432 calls/sec.
+out-of-process "localhost" buffered synch calls [python -> RPC -> python -> c++]
+:
+        call(int)               4856.348471 calls/sec.
+        call(str[len=8])        4650.203720 calls/sec.
+        call(str[len=16])       4612.721776 calls/sec.
+        call(str[len=32])       4633.573750 calls/sec.
+        call(str[len=64])       4632.037284 calls/sec.
+        call(str[len=128])      4657.999418 calls/sec.
+out-of-process "localhost" buffered asynch calls [python -> RPC -> python -> c++
+]:
+        call(int)               8885.482097 calls/sec.
+        call(str[len=8])        8782.766706 calls/sec.
+        call(str[len=16])       8786.995314 calls/sec.
+        call(str[len=32])       8804.157808 calls/sec.
+        call(str[len=64])       8758.325900 calls/sec.
+        call(str[len=128])      8667.702515 calls/sec.
+out-of-process "10.0.2.2" synch calls [c++ -> python -> RPC -> python -> c++]:
+        call(int)               1263.222822 calls/sec.
+        call(str[len=8])        1245.363332 calls/sec.
+        call(str[len=16])       1257.213014 calls/sec.
+        call(str[len=32])       1257.213014 calls/sec.
+        call(str[len=64])       1254.325524 calls/sec.
+        call(str[len=128])      1248.209660 calls/sec.
+out-of-process "10.0.2.2" synch indirect calls [python -> RPC -> python -> c++]:
+
+        call(int)               1257.788742 calls/sec.
+        call(str[len=8])        1252.081516 calls/sec.
+        call(str[len=16])       1250.575315 calls/sec.
+        call(str[len=32])       1248.927878 calls/sec.
+        call(str[len=64])       1248.477518 calls/sec.
+        call(str[len=128])      1246.097418 calls/sec.
+out-of-process "10.0.2.2" synch direct calls [python -> RPC -> python -> c++]:
+        call(int)               3736.244089 calls/sec.
+        call(str[len=8])        3624.202574 calls/sec.
+        call(str[len=16])       3627.128843 calls/sec.
+        call(str[len=32])       3618.339909 calls/sec.
+        call(str[len=64])       3609.958291 calls/sec.
+        call(str[len=128])      3593.370577 calls/sec.
+out-of-process "10.0.2.2" buffered synch calls [python -> RPC -> python -> c++]:
+
+        call(int)               3715.204646 calls/sec.
+        call(str[len=8])        3619.164876 calls/sec.
+        call(str[len=16])       3613.779635 calls/sec.
+        call(str[len=32])       3604.378022 calls/sec.
+        call(str[len=64])       3601.356466 calls/sec.
+        call(str[len=128])      3594.650916 calls/sec.
+out-of-process "10.0.2.2" buffered asynch calls [python -> RPC -> python -> c++]
+:
+        call(int)               9165.990399 calls/sec.
+        call(str[len=8])        9046.258125 calls/sec.
+        call(str[len=16])       9049.851642 calls/sec.
+        call(str[len=32])       9047.724533 calls/sec.
+        call(str[len=64])       8927.305098 calls/sec.
+        call(str[len=128])      8249.053609 calls/sec.
+out-of-process "prg3k04" synch calls [c++ -> python -> RPC -> python -> c++]:
+        call(int)               506.053867 calls/sec.
+        call(str[len=8])        487.270997 calls/sec.
+        call(str[len=16])       488.142057 calls/sec.
+        call(str[len=32])       495.523833 calls/sec.
+        call(str[len=64])       493.672412 calls/sec.
+        call(str[len=128])      485.423086 calls/sec.
+out-of-process "prg3k04" synch indirect calls [python -> RPC -> python -> c++]:
+        call(int)               500.636917 calls/sec.
+        call(str[len=8])        510.168776 calls/sec.
+        call(str[len=16])       498.240439 calls/sec.
+        call(str[len=32])       486.192609 calls/sec.
+        call(str[len=64])       509.393537 calls/sec.
+        call(str[len=128])      495.204130 calls/sec.
+out-of-process "prg3k04" synch direct calls [python -> RPC -> python -> c++]:
+        call(int)               1477.648605 calls/sec.
+        call(str[len=8])        1395.251399 calls/sec.
+        call(str[len=16])       1424.747611 calls/sec.
+        call(str[len=32])       1452.396085 calls/sec.
+        call(str[len=64])       1379.601242 calls/sec.
+        call(str[len=128])      1375.746616 calls/sec.
+out-of-process "prg3k04" buffered synch calls [python -> RPC -> python -> c++]:
+        call(int)               1496.729184 calls/sec.
+        call(str[len=8])        1498.203518 calls/sec.
+        call(str[len=16])       1460.120720 calls/sec.
+        call(str[len=32])       1403.391747 calls/sec.
+        call(str[len=64])       1442.221234 calls/sec.
+        call(str[len=128])      1462.295190 calls/sec.
+out-of-process "prg3k04" buffered asynch calls [python -> RPC -> python -> c++]:
+
+        call(int)               6514.813030 calls/sec.
+        call(str[len=8])        6264.466887 calls/sec.
+        call(str[len=16])       6266.069012 calls/sec.
+        call(str[len=32])       6267.281860 calls/sec.
+        call(str[len=64])       6425.197500 calls/sec.
+        call(str[len=128])      5953.323319 calls/sec.
+
+D:\starteam\docplatform\rpcpp\bin>
